@@ -1,0 +1,94 @@
+import logging
+import API_Module
+
+class translator_py:
+    def __init__(self):
+        pass
+
+    def t_print(self, text, indentCount):
+        x = text.lower()
+        x = x.replace('print ', '')
+
+        result = "print" + '("' + x + '")'
+        for i in range(indentCount):
+            result = "    " + result
+
+        return result
+
+    def t_var(self, text, indentCount):
+        x = text.lower()
+        x = x.replace('is equal to', '=').replace('equal to', '=').replace('variable ', '')
+
+        value = x.split(' ')[-1]
+        x = x.replace(value, '')
+        result = str()
+
+        if value.isnumeric():
+            result = x + value
+        else:
+            result = x + '"' + value + '"'
+
+        for i in range(indentCount):
+            result = "    " + result
+
+        return result
+
+    def t_IF(self, text, indentCount):
+        x = text.lower()
+        x = x.replace('is equal to', '==').replace('is not equal to', '!=').replace('is greater than', '>').replace('is lesser than', '<').replace('is greater than or equal to', '>=').replace('is lesser than or equal to', '<=')
+
+        value = x.split(' ')[-1]
+        x = x.replace(value, '')
+        result = str()
+
+        if value.isnumeric():
+            result = x + value
+        else:
+            result = x + '"' + value + '"'
+
+        for i in range(indentCount):
+            result = "    " + result
+
+        return result+":", indentCount+1
+
+    def t_ELIF(self, text, indentCount):
+        x = text.lower()
+        x = x.replace('else if', 'elif').replace('is equal to', '==').replace('is not equal to', '!=').replace('is reater than', '>').replace('is lesser than', '<').replace('is greater than or equal to', '>=').replace('is lesser than or equal to', '<=')
+
+        value = x.split(' ')[-1]
+        x = x.replace(value, '')
+        result = str()
+
+        if value.isnumeric():
+            result = x + value
+        else:
+            result = x + '"' + value + '"'
+
+        for i in range(indentCount-1):
+            result = "    " + result
+
+        return result+":", indentCount
+
+    def t_ELSE(self, text, indentCount):
+        x = text.lower()
+        result = x
+
+        for i in range(indentCount-1):
+            result = "    " + result
+
+        return result+":", indentCount
+
+    def t_FOR(self, text, indentCount):
+        x = text.lower()
+
+        value = x.split(' ')[-1]
+        x = x.replace(value, '')
+        result = str()
+
+        if value.isnumeric():
+            result = x + "(" + value + ")"
+
+        for i in range(indentCount):
+            result = "    " + result
+
+        return result + ":", indentCount + 1
