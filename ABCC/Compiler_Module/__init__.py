@@ -137,12 +137,27 @@ class translator_py:
         pygui.press("left")
         pygui.press("left")
 #command to trigger this function "add classes x to class y"
-        return text.replace("add class", "").replace("add classes", "").replace("and", ",").split("to class", 1)[0]
+        return text.replace("add parent class", "").replace("add parent classes", "").replace("and", ",").split("to class", 1)[0]
 
     def t_indent(self, text):
         result = "    "+text.lower().replace('indent', '')
         return result
 
+    def t_array(self, text):
+        x = text.lower().replace("new list ", "").replace(" and ", ",").replace('is equal to', '=').replace('equal to', '=')
+        values = x.split("= ")[1]
+        arrayOfValues = values.split(",")
+        resultArray = []
+
+        for i in arrayOfValues:
+            if i.isnumeric():
+                resultArray.append(int(i))
+            else:
+                resultArray.append(i)
+
+        return x.replace(values, "") + str(resultArray)
+
+    #TODO:- have to create a way for arrays and dictionary, input
     #Navigator
     def tN_goto(self, text):
         number = text.split(" ")[-1]
@@ -157,3 +172,6 @@ class translator_py:
 
         replaceVal = "go to line " + number
         return text.replace(replaceVal, "")
+
+obj = translator_py()
+print(obj.t_array("array x = 1 and hello world and hello world and 19191 and justin is a noob 1"))

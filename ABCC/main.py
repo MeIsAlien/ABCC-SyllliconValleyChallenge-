@@ -23,6 +23,7 @@ stg14_res = str()
 stg15_res = str()
 stg16_res = str()
 stg17_res = str()
+stg18_res = str()
 
 final_res = str()
 lineCount = 0
@@ -32,7 +33,8 @@ def_dict = {}
 class_dict = {}
 
 while True:
-    raw_text = sr.mic_input()
+    raw_text = "b dot append"
+    raw_text = raw_text.replace(" dot ", ".").replace("append", "append()")
     if 'print' in raw_text:
         stg1_res = cmpl.t_print(raw_text)
     else:
@@ -138,7 +140,7 @@ while True:
     else:
         stg16_res = stg15_res
 
-    if 'add class' in stg16_res:
+    if 'add parent class' in stg16_res:
         Class = stg16_res.split(" ")[-1].replace("():", "")
         print(Class)
         print(class_dict.get(Class))
@@ -147,7 +149,12 @@ while True:
     else:
         stg17_res = stg16_res
 
-    final_res = stg17_res
+    if 'new list' in stg17_res:
+        stg18_res = cmpl.t_array(stg17_res)
+    else:
+        stg18_res = stg17_res
+
+    final_res = stg18_res
 
     if final_res != "" and newLine_flag == False:
         lineCount = lineCount + 1
