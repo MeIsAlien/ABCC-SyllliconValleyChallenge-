@@ -7,70 +7,134 @@ class translator_py:
     def __init__(self):
         pass
 
+    #TODO:- have to write inside method instead of returning
     def t_print(self, text):
-        x = text.lower()
-        x = x.replace('print ', '')
-        if "placeholder" in x:
-            result = "print" + '(' + x + ')'
-            result = result.replace("placeholder", "").replace("x", '*')
+        x = text.lower().replace('\in', " \n")
+        x = x.replace('print ', '').replace("nun", "none").replace("print", "")
+
+        z=str()
+        y=str()
+        endNone = False
+        try:
+            y=text.lower().split()[-1].replace("nun", "none")
+            z=text.lower().split()[-2].replace("nun", "none")
+        except Exception as e:
+            print(e)
+
+        if z == "last":
+            x = x.replace(f" last {y}", "")
+            endNone = True
+
+        if y=="none" or y=="null":
+            y = y.replace(y, '""')
         else:
-            result = "print" + '("' + x + '")'
-        return result
+            y = y.replace(y, f'"{y}"')
+
+        if 'format' in x:
+            variableName = []
+            xArray = x.split()
+
+            for i in range(len(xArray)-1):
+                print(i)
+                if xArray[i] == "format":
+                    variableName.append(xArray[i+1])
+                    xArray[i] = "{}"
+                    xArray.pop(i+1)
+            
+            if endNone == True:
+                result = '"' +' '.join(map(str, xArray)) + '"' +".format("+','.join(map(str, variableName))+")"+f", end={y}"
+            else:
+                result = '"' +' '.join(map(str, xArray)) + '"' +".format("+','.join(map(str, variableName))+")"
+
+            result = "print(" + result + ')'
+
+        elif 'placeholder' in x.split()[0]:
+            if endNone == False:
+                result = "print(" + x.replace("placeholder ", "") + ')'
+            else:
+                result = "print(" + x.replace("placeholder", "") + f', end={y})'
+        else:
+            if endNone == True:
+                result = "print" + '("' + x + f'", end={y}' +")"
+            else:
+                result = "print" + '("' + x +'")'
+
+        pygui.write(result)
 
     def t_var(self, text):
         x = text.lower()
-        x = x.replace('is equal to', '=').replace('equal to', '=').replace('variable ', '', 1)
-        print(x)
+        x = x.replace('is equal to', '=').replace('equal to', '=').replace('variable ', '')
+
         value = x.split('=', 1)[1]
         x = x.replace(value, '')
         result = str()
-        if value.isnumeric():
-            result = x + value
-        else:
-            if 'variable' in value:
-                result = x + value.replace("variable ", "")
+        value = value.replace(" ", "", 1)
+        try:
+            float(value)
+            result = x + value.replace("variable", "")
+        except Exception as e:
+            print(value.split()[0])
+            if value.isnumeric() or value.split()[0] == 'variable' or value.split()[0] == 'input':
+                if value.split()[0] == 'input':
+                    result = x + 'input("' + value.replace("input", "") + '")'
+                else:
+                    result = x + value.replace("variable", "")
+            elif value=="true" or value=="false":
+                result = x+value.replace("true", "True").replace("false", "False")
             else:
                 result = x + '"' + value + '"'
-
         #TODO:-  Currently need to add variable reassignment for later iteration
 
-        return result
-
+        pygui.write(result)
     def t_IF(self, text):
         x = text.lower()
         x = x.replace('is equal to', '==').replace('is not equal to', '!=').replace('is greater than', '>').replace('is lesser than', '<').replace('is greater than or equal to', '>=').replace('is lesser than or equal to', '<=')
 
-        value = x.split(' ')[-1]
+        if "if" not in x.split('=')[-1]:
+            value = x.split('=')[-1]
+        elif "if" not in x.split('>')[-1]:
+            value = x.split('>')[-1]
+        elif "if" not in x.split('<')[-1]:
+            value2 = x.split('<')[-1]
+            
         x = x.replace(value, '')
         result = str()
 
-        if value.isnumeric():
+        if value.replace(" ", "").isnumeric():
             result = x + value
+        elif value=="true" or value=="false":
+            result = x+value.replace("true", "True").replace("false", "False")
         else:
             result = x + '"' + value + '"'
 
-        return result+":"
+        pygui.write(result+":")
 
     def t_ELIF(self, text):
         x = text.lower()
-        x = x.replace('else if', 'elif').replace('is equal to', '==').replace('is not equal to', '!=').replace('is reater than', '>').replace('is lesser than', '<').replace('is greater than or equal to', '>=').replace('is lesser than or equal to', '<=')
+        x = x.replace('else if', 'elif').replace('is equal to', '==').replace('is not equal to', '!=').replace('is greater than', '>').replace('is lesser than', '<').replace('is greater than or equal to', '>=').replace('is lesser than or equal to', '<=')
 
-        value = x.split(' ')[-1]
+        value = x.split('=')[-1]
         x = x.replace(value, '')
-        result = str()
+        result = x
 
-        if value.isnumeric():
+        if value.replace(" ", "").isnumeric():
             result = x + value
+        elif value=="true" or value=="false":
+            result = x+value.replace("true", "True").replace("false", "False")
         else:
             result = x + '"' + value + '"'
 
-        return result+":"
+        pygui.press("home")
+        print(result)
+        pygui.write(result+":")
+        pygui.press("end")
 
     def t_ELSE(self, text):
         x = text.lower()
         result = x
 
-        return result+":"
+        pygui.press("home")
+        pygui.write(result+":")
 
     def t_FOR(self, text):
         x = text.lower()
@@ -81,21 +145,25 @@ class translator_py:
 
         if value.isnumeric():
             result = x + "(" + value + ")"
+        else:
+            result = x + "(" + value + ")"
 
-        return result + ":"
+        pygui.write(result + ":")
+        print(result)
 
     def t_input(self, text):
         x = text.lower()
         result = x.split('input', 1)[1]
 
-        return result
+        pygui.write(result)
 
     def t_def(self, text):
         x = text.lower()
         x = x.replace("define method", "def")
         mName = text.replace("define method","")
 
-        return x+"():", mName
+        pygui.write(x+"():")
+        return mName
 
     def t_param(self, text, line, mName):
         pygui.hotkey('ctrl', 'home')
@@ -106,7 +174,7 @@ class translator_py:
         pygui.press("left")
         pygui.press("left")
 
-        return text.replace("add parameters", "").replace("add parameter", "").replace("and", ",").split("in method", 1)[0]
+        pygui.write(text.replace("add parameters", "").replace("add parameter", "").replace("and", ",").split("in method", 1)[0])
 
     def t_return(self, text):
         x = text.lower()
@@ -122,42 +190,12 @@ class translator_py:
         else:
             result = x + '"' + value + '"'
 
-    def t_class(self, text):
-        x = text.lower()
-        x = x.replace("create ", "")
-        cName = text.replace("create class ","")
-
-        return x+"():", cName
-
-    def t_extends(self, text, line, cName):
-        pygui.hotkey('ctrl', 'home')
-        for i in range(int(line) - 1):
-            pygui.press("down")
-        pygui.press("end")
-        pygui.press("left")
-        pygui.press("left")
-#command to trigger this function "add classes x to class y"
-        return text.replace("add parent class", "").replace("add parent classes", "").replace("and", ",").split("to class", 1)[0]
+        pygui.write(result)
 
     def t_indent(self, text):
         result = "    "+text.lower().replace('indent', '')
-        return result
+        pygui.write(result)
 
-    def t_array(self, text):
-        x = text.lower().replace("new list ", "").replace(" and ", ",").replace('is equal to', '=').replace('equal to', '=')
-        values = x.split("= ")[1]
-        arrayOfValues = values.split(",")
-        resultArray = []
-
-        for i in arrayOfValues:
-            if i.isnumeric():
-                resultArray.append(int(i))
-            else:
-                resultArray.append(i)
-
-        return x.replace(values, "") + str(resultArray)
-
-    #TODO:- have to create a way for arrays and dictionary, input
     #Navigator
     def tN_goto(self, text):
         number = text.split(" ")[-1]
@@ -166,12 +204,9 @@ class translator_py:
         if number == "next":
             pygui.press("end")
             pygui.press("enter")
-        elif int(number):
+        elif number.isnumeric():
             for i in range(int(number)-1):
                 pygui.press("down")
 
         replaceVal = "go to line " + number
-        return text.replace(replaceVal, "")
-
-obj = translator_py()
-print(obj.t_array("array x = 1 and hello world and hello world and 19191 and justin is a noob 1"))
+        pygui.write(text.replace(replaceVal, ""))
