@@ -1,0 +1,28 @@
+2020-12-27 13:21:24,254 User Said: can't send you
+2020-12-27 13:21:24,260 No Errors
+2020-12-27 13:21:33,807 User Said: 
+2020-12-27 13:21:33,813 list index out of range
+2020-12-27 13:21:42,039 User Said: 
+2020-12-27 13:21:42,051 list index out of range
+2020-12-27 13:21:47,106 User Said: 
+2020-12-27 13:21:47,106 list index out of range
+2020-12-27 13:21:56,050 User Said: 
+2020-12-27 13:21:56,072 list index out of range
+2020-12-27 13:22:46,606 User Said: rock rock
+2020-12-27 13:22:46,618 No Errors
+2020-12-27 13:22:54,029 User Said: 
+2020-12-27 13:22:54,035 list index out of range
+2020-12-27 13:23:02,420 User Said: 
+2020-12-27 13:23:02,426 list index out of range
+2020-12-27 13:23:08,632 User Said: 
+2020-12-27 13:23:08,650 list index out of range
+2020-12-27 13:23:18,040 User Said: 
+2020-12-27 13:23:18,040 list index out of range
+2020-12-27 13:23:24,914 User Said: 
+2020-12-27 13:23:24,932 list index out of range
+2020-12-27 13:26:55,331 User Said: 
+2020-12-27 13:26:55,360 list index out of range
+2020-12-27 13:27:03,435 User Said: nrega
+2020-12-27 13:27:03,447 No Errors
+2020-12-27 13:27:09,670 User Said: 
+2020-12-27 13:27:09,682 list index out of range
